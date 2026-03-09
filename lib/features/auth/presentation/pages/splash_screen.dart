@@ -4,8 +4,7 @@ import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
 import 'login_screen.dart';
-// Note: We will implement HomeScreen later
-// import '../../tasks/presentation/pages/home_screen.dart';
+import '../../tasks/presentation/pages/home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -27,8 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is Authenticated) {
-            // Navigate to Home
-            // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const HomeScreen()));
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const HomeScreen()));
           } else if (state is Unauthenticated || state is AuthError) {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (_) => const LoginScreen()),

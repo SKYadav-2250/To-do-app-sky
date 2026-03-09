@@ -12,6 +12,17 @@ import 'features/auth/domain/usecases/signup_usecase.dart';
 import 'features/auth/domain/usecases/logout_usecase.dart';
 import 'features/auth/domain/usecases/get_current_user_usecase.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
+
+// Task use cases imports
+import 'features/tasks/domain/repositories/task_repository.dart';
+import 'features/tasks/data/datasources/task_remote_data_source.dart';
+import 'features/tasks/data/repositories/task_repository_impl.dart';
+import 'features/tasks/domain/usecases/get_tasks_usecase.dart';
+import 'features/tasks/domain/usecases/add_task_usecase.dart';
+import 'features/tasks/domain/usecases/update_task_usecase.dart';
+import 'features/tasks/domain/usecases/delete_task_usecase.dart';
+import 'features/tasks/presentation/bloc/task_bloc.dart';
+
 import 'core/network/api_client.dart';
 
 final sl = GetIt.instance;
@@ -46,6 +57,29 @@ Future<void> init() async {
   );
   
   // Features - Tasks
+  // Bloc
+  sl.registerFactory(() => TaskBloc(
+        getTasksUseCase: sl(),
+        addTaskUseCase: sl(),
+        updateTaskUseCase: sl(),
+        deleteTaskUseCase: sl(),
+      ));
+
+  // Use cases
+  sl.registerLazySingleton(() => GetTasksUseCase(sl()));
+  sl.registerLazySingleton(() => AddTaskUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateTaskUseCase(sl()));
+  sl.registerLazySingleton(() => DeleteTaskUseCase(sl()));
+
+  // Repository
+  sl.registerLazySingleton<TaskRepository>(
+    () => TaskRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  // Data sources
+  sl.registerLazySingleton<TaskRemoteDataSource>(
+    () => TaskRemoteDataSourceImpl(apiClient: sl()),
+  );
 
   // Core
   sl.registerLazySingleton(() => ApiClient(dio: sl()));
